@@ -1,0 +1,48 @@
+#!/bin/execlineb -S0
+# report our internet facing IP,
+# as seen by two members of the barnyard
+# ipbarn2 -v = verbose
+
+# these failed:
+#pipeline { echo "mule goose duck donkey turkey deer bull snake frog dolphin fox cat seal dog dove pidgeon moose sheep pony rabbit bunny lion zebra bear racoon tiger tigger puppy steer hippo elephant lizard clam shrimp ewe lobster bird crow eagle bug spider squirrel skunk gorilla otter badger beaver crab octopus penguin shark cougar wasp bee butterfly moth beetle fly toad grasshopper bluebird parrot hawk ladybug gnat caterpillar worm snail hamster wolf coyote lynx mink flamingo panther ostrich lamb crocodile bat woodpecker sponge ram rat" }
+
+# these worked:
+pipeline { echo "chicken rooster cow horse pig turtle goat kitten fish mouse whale monkey unicorn dragon owl ant cricket dinosaur camel" }
+
+pipeline { tr " " "\n" }
+pipeline { shuf }
+
+piperw 7 8
+foreground { fdmove 1 8 echo "eof" }
+
+# for each animal
+forstdin -x77 -E animal
+
+#pipeline { wget -T 5 -q http://ip${animal}.com -O - }
+pipeline { curl -q -s --connect-timeout 5 -L http://ip${animal}.com }
+
+pipeline { sed -e "/[0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*/!d" -e "s:^.*[^0-9.-]\\([0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*\\)[^0-9.].*$:\\1:" -e "/[0-9][0-9][0-9][0-9]/d" }
+pipeline { tail -1 }
+withstdinas -E IP
+
+#found one?
+ifelse { test ${IP} } {
+	foreground {
+		if { test ${1} = "-v" }
+		echo "${animal}: ${IP}"
+	}
+	fdmove 0 7
+	forstdin -o11 -E IP2
+	ifelse { test ${IP} = ${IP2} } {
+		# IPs match done.
+		foreground { echo ${IP} }
+		exit 77
+	}
+	ifelse { test "eof" = ${IP2} } {
+		fdmove 1 8 echo ${IP}
+	}
+	foreground { echo "IPs do not match ${IP2} != ${IP}" }
+	exit 77
+}
+if { test ${1} = "-v" }
+echo "${animal} failed"

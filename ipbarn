@@ -1,0 +1,36 @@
+#!/bin/execlineb -S0
+# report our network facing IP as seen by the barnyard
+# ipbarn -v = verbose
+# ipbarn -a = all animals (do not stop on success, implies -v)
+
+# these failed:
+#pipeline { echo "mule goose duck donkey turkey deer bull snake frog dolphin fox cat seal dog dove pidgeon moose sheep pony rabbit bunny lion zebra bear racoon tiger tigger puppy steer hippo elephant lizard clam shrimp ewe lobster bird crow eagle bug spider squirrel skunk gorilla otter badger beaver crab octopus penguin shark cougar wasp bee butterfly moth beetle fly toad grasshopper bluebird parrot hawk ladybug gnat caterpillar worm snail hamster wolf coyote lynx mink flamingo panther ostrich lamb crocodile bat woodpecker sponge ram rat" }
+
+# these worked:
+pipeline { echo "chicken rooster cow horse pig turtle goat kitten fish mouse whale monkey unicorn dragon owl ant cricket dinosaur camel" }
+
+pipeline { tr " " "\n" }
+pipeline { shuf }
+# for each animal
+forstdin -x 0 -E animal
+
+#pipeline { wget -T 5 -q http://ip${animal}.com -O - }
+pipeline { curl -q -s --connect-timeout 5 -L http://ip${animal}.com }
+
+pipeline { sed -e "/[0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*/!d" -e "s:^.*[^0-9.-]\\([0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*\\)[^0-9.].*$:\\1:" -e "/[0-9][0-9][0-9][0-9]/d" }
+pipeline { tail -1 }
+withstdinas -E IP
+
+if {
+	ifelse -n { test $1 = "-v" -o $1 = "-a" } {
+		if { test ${IP} }
+		echo ${IP}
+	}
+	ifelse { test ${IP} } {
+		echo "${animal}: ${IP}"
+	}
+	foreground { echo "${animal}: failed" }
+	exit 1
+}
+
+if -n { test ${1} = "-a" }

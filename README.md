@@ -1,0 +1,17 @@
+# ipbarn
+
+Two simple command line scripts to get your internet facing IPv4 address by asking barnyard animals. Both written in [execline][1]
+
+## `ipbarn`
+
+This can take one of two possible options "-v" or "-a".
+
+* `-v` - verbose: reports failures, and animal names.
+
+* `-a` - all: runs through the entire list (does not stop on success) this also implies `-v`
+
+## `ipbarn2`
+
+This works the same as `ipbarn` above, but does not support the `-a` command, and will only succeed when two different animals report the same IP address.
+
+[1]: https://www.skarnet.org/software/execline/
