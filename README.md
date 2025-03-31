@@ -2,6 +2,8 @@
 
 Two simple command line scripts to get your internet facing IPv4 address by asking barnyard animals. Both written in [execline][1]
 
+By default, they merely report your IPv4 address.
+
 ## `ipbarn`
 
 This can take one of two possible options "-v" or "-a".
