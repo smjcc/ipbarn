@@ -4,10 +4,10 @@
 # ipbarn2 -v = verbose
 
 # these failed:
-#pipeline { echo "mule goose duck donkey turkey deer bull snake frog dolphin fox cat seal dog dove pidgeon moose sheep pony rabbit bunny lion zebra bear racoon tiger tigger puppy steer hippo elephant lizard clam shrimp ewe lobster bird crow eagle bug spider squirrel skunk gorilla otter badger beaver crab octopus penguin shark cougar wasp bee butterfly moth beetle fly toad grasshopper bluebird parrot hawk ladybug gnat caterpillar worm snail hamster wolf coyote lynx mink flamingo panther ostrich lamb crocodile bat woodpecker sponge ram rat" }
+#pipeline { echo "mule goose duck donkey turkey deer bull snake frog dolphin fox cat seal dog dove pidgeon moose sheep pony rabbit bunny lion zebra bear racoon tiger tigger puppy steer hippo elephant lizard clam shrimp ewe lobster bird crow eagle bug spider squirrel skunk gorilla otter badger beaver crab octopus penguin shark cougar wasp bee butterfly moth beetle fly toad grasshopper bluebird parrot hawk ladybug gnat caterpillar worm snail hamster wolf coyote lynx mink flamingo panther ostrich lamb crocodile bat woodpecker sponge ram rat peacock" }
 
 # these worked:
-pipeline { echo "chicken rooster cow horse pig turtle goat kitten fish mouse whale monkey unicorn dragon owl ant cricket dinosaur camel" }
+pipeline { echo "chicken rooster cow horse pig turtle goat kitten fish mouse whale monkey unicorn dragon owl ant cricket dinosaur camel doggy ghost" }
 
 pipeline { tr " " "\n" }
 pipeline { shuf }
