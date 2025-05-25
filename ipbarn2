@@ -3,6 +3,8 @@
 # as seen by two members of the barnyard
 # ipbarn2 -v = verbose
 
+# version 0.0.2 2025 May 25
+
 # these failed:
 #pipeline { echo "mule goose duck donkey turkey deer bull snake frog dolphin fox cat seal dog dove pidgeon moose sheep pony rabbit bunny lion zebra bear racoon tiger tigger puppy steer hippo elephant lizard clam shrimp ewe lobster bird crow eagle bug spider squirrel skunk gorilla otter badger beaver crab octopus penguin shark cougar wasp bee butterfly moth beetle fly toad grasshopper bluebird parrot hawk ladybug gnat caterpillar worm snail hamster wolf coyote lynx mink flamingo panther ostrich lamb crocodile bat woodpecker sponge ram rat peacock mermaid alien grey hog viper trible serpent orangutan marmot cockroach cock swift starling elk salmon beagle stallion boar buck billy mare bullock charger cockerel colt courser critter drake equine filly foal gander gelding gobbler wether cuero semental" }
 
@@ -11,41 +13,36 @@ pipeline { echo "chicken rooster cow horse pig turtle goat kitten fish mouse wha
 
 # for trying out new candidates
 #pipeline { echo "" }
-
 pipeline { tr " " "\n" }
 pipeline { shuf }
 
 piperw 7 8
 foreground { fdmove 1 8 echo "eof" }
 
-# for each animal
-forstdin -x77 -E animal
+if -n {
+	# for each animal
+	forstdin -o0 -E animal
+	
+	#pipeline { wget -T 5 -q http://ip${animal}.com -O - }
+	pipeline { curl -q -s --connect-timeout 5 -L http://ip${animal}.com }
+	pipeline { sed -e "/[0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*/!d" -e "s:^.*[^0-9.-]\\([0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*\\)[^0-9.].*$:\\1:" -e "/[0-9][0-9][0-9][0-9]/d" }
+	pipeline { tail -1 }
+	withstdinas -E IP
 
-#pipeline { wget -T 5 -q http://ip${animal}.com -O - }
-pipeline { curl -q -s --connect-timeout 5 -L http://ip${animal}.com }
-
-pipeline { sed -e "/[0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*/!d" -e "s:^.*[^0-9.-]\\([0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*[.][0-9][0-9]*\\)[^0-9.].*$:\\1:" -e "/[0-9][0-9][0-9][0-9]/d" }
-pipeline { tail -1 }
-withstdinas -E IP
-
-#found one?
-ifelse { test ${IP} } {
-	foreground {
-		if { test ${1} = "-v" }
-		echo "${animal}: ${IP}"
-	}
-	fdmove 0 7
-	forstdin -o11 -E IP2
-	ifelse { test ${IP} = ${IP2} } {
-		# IPs match done.
+	#found one?
+	ifelse { test ${IP} } {
+		foreground {
+			if -t { test ${1} = "-v" }
+			echo "${animal}: ${IP}"
+		}
+		fdmove 0 7
+		forstdin -o77 -E IP2
+		foreground { fdmove 1 8 echo ${IP} }
+		if -t { test ${IP} = ${IP2} }
+		# IPs match, done.
 		foreground { echo ${IP} }
-		exit 77
+		exit 1
 	}
-	ifelse { test "eof" = ${IP2} } {
-		fdmove 1 8 echo ${IP}
-	}
-	foreground { echo "IPs do not match ${IP2} != ${IP}" }
-	exit 77
+	if -t { test ${1} = "-v" }
+	echo "${animal} failed"
 }
-if { test ${1} = "-v" }
-echo "${animal} failed"
