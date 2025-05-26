@@ -12,6 +12,8 @@ This can take one of two possible options "-v" or "-a".
 
 * `-a` - all: runs through the entire list (does not stop on success) this also implies `-v`
 
+Return code is 0 for success, and 1 for failure. With the -a option, the return code is always 1.
+
 ## `ipbarn2`
 
 This works the same as `ipbarn` above, but does not support the `-a` command, and will only succeed when two different animals report the same IP address.
