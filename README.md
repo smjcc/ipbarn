@@ -16,6 +16,6 @@ Return code is 0 for success, and 1 for failure. With the -a option, the return 
 
 ## `ipbarn2`
 
-This works the same as `ipbarn` above, but does not support the `-a` command, and will only succeed when two different animals report the same IP address.
+This works the same as `ipbarn` above, but does not support the `-a` option, and will only succeed when two different animals report the same IP address.
 
 [1]: https://www.skarnet.org/software/execline/
